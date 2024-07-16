@@ -14,6 +14,9 @@ class ThingsMEGDataset(torch.utils.data.Dataset):
         self.num_classes = 1854
         
         self.X = torch.load(os.path.join(data_dir, f"{split}_X.pt"))
+        mean = self.X.mean(dim=-1, keepdim=True)
+        std = self.X.std(dim=-1, keepdim=True)
+        self.X = (self.X - mean) / (std + 10**(-6))
         self.subject_idxs = torch.load(os.path.join(data_dir, f"{split}_subject_idxs.pt"))
         
         if split in ["train", "val"]:
